@@ -21,5 +21,5 @@ exports.run = (client, message, args)  => {
         .setTimestamp(new Date())
         .addField('Casal escolhido foi', `${mentions[0]} ${mentions[1]}`)
         .addField('Chances atuais', `${falas[Math.round(Math.random() * falas.length - 1)]}`, true)
-        message.channel.send(embed);
+        message.channel.send(embed).then(msg => {msg.delete(15000)});
 }
