@@ -2,14 +2,15 @@ const Discord = require(`discord.js`);
 const client = new Discord.Client();
 const prefix = "o!";
 const prefixa = "o!!";
+var fs = require("fs");
+let xp = require("./xp.json");
 
 
 client.login('NDM3NzE5NDc5NTk0NTE2NDg3.Db6Jnw.0PrB6i3qZV-nJIrNTvBu5OAb7D4');
-
 client.on("ready", () => {
-    client.user.setPresence({ game: { name: 'Momentos', type: 1, url: 'https://www.twitch.tv/olszera'} });
+    client.user.setPresence({ game: { name: 'o!ajuda', type: 1, url: 'https://www.twitch.tv/olszera'} });
     console.log(`${client.user.username} esta ligado em ${client.guilds.size} guilds!`)
-    client.user.setStatus('dnd', 'Feito por olsz#0001') 
+    
 }) // CMDS
 client.on("message", message =>{
     if (message.author.bot) return;
@@ -111,4 +112,33 @@ client.on("message", message => {
 })
     }
 })
+client.on("message", message =>{
+let xpAdd = Math.floor(Math.random() * 3) + 5;
 
+  if(!xp[message.author.id]){
+    xp[message.author.id] = {
+      xp: 0,
+      level: 1
+    };
+  }
+
+
+  let curxp = xp[message.author.id].xp;
+  let curlvl = xp[message.author.id].level;
+  let nxtLvl = xp[message.author.id].level * 150;
+  let newlvl = curlvl + 1
+  xp[message.author.id].xp =  curxp + xpAdd;
+  if(nxtLvl <= xp[message.author.id].xp){
+    xp[message.author.id].level = curlvl + 1;
+    let lvlup = new Discord.RichEmbed()
+    .setTitle(`${message.author.user}`)
+    .setColor(2490112)
+    .setImage(`https://cdn.discordapp.com/attachments/437684192663568384/437786741915516929/level-up-gif.gif`)
+    .addField("Você upou de nivel", "**" + newlvl + "**")
+    .addField("XP ATUAL", `**${curxp}**`)
+    message.channel.send(lvlup)
+  }
+  fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
+    if(err) console.log(err)
+  })
+})
